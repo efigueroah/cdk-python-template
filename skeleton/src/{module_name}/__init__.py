@@ -5,5 +5,5 @@ This package contains the infrastructure as code definitions for the {module_nam
 """
 
 __version__ = "0.1.0"
-__author__ = "DevOps Team"
-__email__ = "devops@myorg.com"
+__author__ = "Euclides Figueroa"
+__email__ = "efigueroah@gmail.com"

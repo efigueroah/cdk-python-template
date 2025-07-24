@@ -214,3 +214,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Built with [AWS CDK](https://aws.amazon.com/cdk/)
 - Project structure managed by [Projen](https://projen.io/)
 - Security validation by [CDK Nag](https://github.com/cdklabs/cdk-nag)
+- Template created by [Euclides Figueroa](https://github.com/efigueroah)

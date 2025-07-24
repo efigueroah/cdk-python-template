@@ -11,8 +11,8 @@ sys.path.insert(0, os.path.abspath('../src'))
 
 # -- Project information -----------------------------------------------------
 project = '{module_name}'
-copyright = '2024, DevOps Team'
-author = 'DevOps Team'
+copyright = '2024, Euclides Figueroa'
+author = 'Euclides Figueroa'
 release = '0.1.0'
 
 # -- General configuration ---------------------------------------------------

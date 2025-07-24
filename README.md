@@ -307,3 +307,7 @@ Este proyecto está licenciado bajo [MIT License](LICENSE).
 - [CDK Nag Rules](https://github.com/cdklabs/cdk-nag)
 - [AWS Well-Architected Framework](https://aws.amazon.com/architecture/well-architected/)
 - [Python CDK Examples](https://github.com/aws-samples/aws-cdk-examples/tree/master/python)
+
+---
+
+**Creado por [Euclides Figueroa](https://github.com/efigueroah)** - Especialista en DevOps y AWS

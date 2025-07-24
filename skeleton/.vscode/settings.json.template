@@ -1,0 +1,38 @@
+{
+    "python.defaultInterpreterPath": "./venv/bin/python",
+    "python.linting.enabled": true,
+    "python.linting.flake8Enabled": true,
+    "python.linting.mypyEnabled": true,
+    "python.linting.banditEnabled": true,
+    "python.formatting.provider": "black",
+    "python.sortImports.args": ["--profile", "black"],
+    "python.testing.pytestEnabled": true,
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestArgs": [
+        "tests"
+    ],
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": true
+    },
+    "files.exclude": {
+        "**/__pycache__": true,
+        "**/*.pyc": true,
+        "**/cdk.out": true,
+        "**/node_modules": true,
+        "**/.pytest_cache": true,
+        "**/htmlcov": true,
+        "**/.coverage": true,
+        "**/docs/_build": true
+    },
+    "search.exclude": {
+        "**/cdk.out": true,
+        "**/node_modules": true,
+        "**/.pytest_cache": true,
+        "**/htmlcov": true,
+        "**/docs/_build": true
+    },
+    "aws.cdk.explorer.enabled": true,
+    "aws.profile": "default",
+    "aws.region": "us-east-1"
+}

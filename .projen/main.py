@@ -17,8 +17,8 @@ project = AwsCdkPythonApp(
     # Información básica del proyecto
     name=project_name,
     module_name=module_name,
-    author_email="devops@myorg.com",
-    author_name="DevOps Team",
+    author_email="efigueroah@users.noreply.github.com",
+    author_name="Eduardo Figueroa",
     version="0.1.0",
     description=f"AWS CDK Python project: {project_name}",
     

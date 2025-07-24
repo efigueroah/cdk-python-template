@@ -41,10 +41,10 @@ npm install -g projen
 
 ```bash
 # Crear proyecto desde la plantilla
-projen new --from git::https://github.com/<your-org>/<template-repo-name>.git --name <project-name> --module-name <module-name>
+projen new --from git::https://github.com/efigueroah/cdk-python-template.git --name <project-name> --module-name <module-name>
 
 # Ejemplo:
-projen new --from git::https://github.com/myorg/cdk-python-template.git --name my-infrastructure --module-name my_infrastructure
+projen new --from git::https://github.com/efigueroah/cdk-python-template.git --name my-infrastructure --module-name my_infrastructure
 ```
 
 ### 2. Configuración Inicial
@@ -237,8 +237,8 @@ Si necesitas mantener o mejorar esta plantilla:
 
 ```bash
 # Clonar el repositorio de la plantilla
-git clone https://github.com/<your-org>/<template-repo-name>.git
-cd <template-repo-name>
+git clone https://github.com/efigueroah/cdk-python-template.git
+cd cdk-python-template
 
 # Hacer cambios en .projen/main.py o skeleton/
 # ...
@@ -283,14 +283,14 @@ Si encuentras problemas con la plantilla:
 
 1. Verifica que tienes las versiones correctas de las herramientas
 2. Revisa la documentación y ejemplos
-3. Busca en issues existentes del repositorio
+3. Busca en issues existentes del repositorio: https://github.com/efigueroah/cdk-python-template/issues
 4. Crea un nuevo issue con detalles específicos
 
 ### Contribuir Mejoras
 
 Las contribuciones son bienvenidas:
 
-1. Fork del repositorio
+1. Fork del repositorio: https://github.com/efigueroah/cdk-python-template
 2. Crea una rama para tu feature/fix
 3. Implementa los cambios
 4. Prueba con proyectos de ejemplo

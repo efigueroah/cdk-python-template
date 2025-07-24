@@ -4,14 +4,16 @@ AWS CDK Application Entry Point
 """
 
 import os
+
 from aws_cdk import App, Environment
 from cdk_nag import AwsSolutionsChecks
+
+from .config import get_config
 
 # Import your stacks here
 # from .stacks.network_stack import NetworkStack
 # from .stacks.compute_stack import ComputeStack
 
-from .config import get_config
 
 def main():
     """Main application entry point"""

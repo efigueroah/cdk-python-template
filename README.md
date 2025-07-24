@@ -37,21 +37,67 @@ npm install -g projen
 
 ## Cómo Usar esta Plantilla
 
-### 1. Crear un Nuevo Proyecto
+### Método 1: Script Automatizado (Recomendado)
+
+El método más fácil y confiable es usar el script automatizado que maneja toda la configuración:
 
 ```bash
-# Crear proyecto desde la plantilla
-projen new --from git::https://github.com/efigueroah/cdk-python-template.git --name <project-name> --module-name <module-name>
+# Descargar el script de generación
+curl -O https://raw.githubusercontent.com/efigueroah/cdk-python-template/main/create-project-from-template.sh
+chmod +x create-project-from-template.sh
+
+# Crear un nuevo proyecto
+./create-project-from-template.sh <nombre-proyecto> <nombre-modulo>
 
 # Ejemplo:
-projen new --from git::https://github.com/efigueroah/cdk-python-template.git --name my-infrastructure --module-name my_infrastructure
+./create-project-from-template.sh my-infrastructure my_infrastructure
 ```
 
+**Ventajas del script automatizado:**
+- ✅ Descarga automática del template desde GitHub
+- ✅ Configuración completa del entorno virtual Python
+- ✅ Instalación automática de todas las dependencias
+- ✅ Sustitución correcta de variables del template
+- ✅ Formateo automático del código generado
+- ✅ Inicialización del repositorio Git
+- ✅ Verificación de funcionamiento
+
+### Método 2: Projen Nativo (Limitado)
+
+**⚠️ Nota:** El comando nativo de Projen tiene limitaciones con repositorios de GitHub y puede no funcionar correctamente:
+
+```bash
+# Este método puede fallar con el error "remote-git is not a git command"
+projen new --from git::https://github.com/efigueroah/cdk-python-template.git --name <project-name> --module-name <module-name>
+```
+
+**Por esta razón, recomendamos usar el script automatizado.**
+
 ### 2. Configuración Inicial
+
+Si usaste el script automatizado, la mayoría de la configuración ya está lista. Solo necesitas:
 
 ```bash
 # Navegar al directorio del proyecto
 cd <project-name>
+
+# El entorno virtual y dependencias ya están instalados por el script
+# Activar el entorno virtual (si no está activo)
+source .env/bin/activate
+
+# Configurar pre-commit hooks (opcional pero recomendado)
+pre-commit install
+```
+
+Si usaste el método manual de Projen, necesitarás:
+
+```bash
+# Navegar al directorio del proyecto
+cd <project-name>
+
+# Crear y activar entorno virtual
+python3 -m venv .env
+source .env/bin/activate
 
 # Instalar dependencias de Python
 pip install -r requirements.txt
@@ -85,21 +131,29 @@ ENVIRONMENTS = {
 ### 4. Primeros Pasos
 
 ```bash
-# Verificar que todo funciona correctamente
-npm run test
+# Verificar que todo funciona correctamente (si usaste el script, ya está verificado)
+projen test
 
 # Sintetizar la aplicación CDK
-npm run synth
+projen synth
+# o usando CDK directamente:
+cdk synth
 
 # Ver diferencias (requiere stack existente)
-npm run diff
+projen diff
+# o usando CDK directamente:
+cdk diff
 
 # Desplegar a desarrollo
-ENV=dev npm run deploy:env
+ENV=dev projen deploy:env
+# o usando CDK directamente:
+cdk deploy --context environment=dev
 
 # Generar documentación
-npm run docs:build
+projen docs:build
 ```
+
+**Nota:** El script automatizado ya verifica que `cdk synth` funcione correctamente durante la creación del proyecto.
 
 ## Estructura del Proyecto Generado
 

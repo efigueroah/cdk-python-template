@@ -155,6 +155,39 @@ projen docs:build
 
 **Nota:** El script automatizado ya verifica que `cdk synth` funcione correctamente durante la creación del proyecto.
 
+## 🎯 Demos y Ejemplos
+
+En la carpeta [`demos/`](./demos/) encontrarás proyectos de ejemplo que demuestran diferentes patrones y arquitecturas usando esta plantilla:
+
+### [📊 my-datalake](./demos/my-datalake/) - Data Lake Architecture
+- **Arquitectura completa de Data Lake** con S3, Glue, y Athena
+- **Gestión de datos por capas**: Raw, processed, y curated
+- **Políticas de lifecycle** y configuraciones de seguridad
+- **Stack único** para simplicidad de despliegue
+
+### [🏗️ multi-stack-demo](./demos/multi-stack-demo/) - Multi-Stack Architecture  
+- **Arquitectura multi-stack** con separación de responsabilidades
+- **Network Stack**: VPC, subnets, internet gateway
+- **Storage Stack**: S3 buckets con diferentes lifecycle policies
+- **Referencias cruzadas** entre stacks
+- **24 tests comprehensivos** y validaciones CDK Nag
+- **Estructura organizada**: `src/stacks/{función}/{recurso}/`
+
+Estos demos sirven como:
+- ✅ **Ejemplos prácticos** de uso de la plantilla
+- ✅ **Patrones de arquitectura** probados y documentados  
+- ✅ **Punto de partida** para proyectos reales
+- ✅ **Mejores prácticas** de seguridad y testing
+
+Para usar cualquier demo:
+```bash
+cd demos/[nombre-del-demo]
+source .env/bin/activate
+cdk list
+python -m pytest tests/ -v
+cdk deploy --all
+```
+
 ## Estructura del Proyecto Generado
 
 ```

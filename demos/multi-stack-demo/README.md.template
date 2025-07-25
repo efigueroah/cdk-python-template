@@ -1,0 +1,217 @@
+# {module_name}
+
+AWS CDK Python application for [describe your project purpose here].
+
+## Overview
+
+This project provides infrastructure as code using AWS CDK with Python, following best practices for security, reliability, and maintainability.
+
+## Architecture
+
+[Add architecture diagram and description here]
+
+## Prerequisites
+
+- Python 3.11+
+- Node.js 18+
+- AWS CDK CLI: `npm install -g aws-cdk`
+- AWS CLI configured with appropriate credentials
+
+## Quick Start
+
+### 1. Install Dependencies
+
+```bash
+# Install Python dependencies
+pip install -r requirements.txt
+
+# Install development dependencies
+pip install -r requirements-dev.txt
+```
+
+### 2. Configure Environments
+
+Edit `src/{module_name}/config.py` to set your AWS account IDs and regions:
+
+```python
+ENVIRONMENTS = {
+    "dev": {
+        "account": "YOUR_DEV_ACCOUNT_ID",
+        "region": "us-east-1",
+        # ...
+    },
+    "prod": {
+        "account": "YOUR_PROD_ACCOUNT_ID", 
+        "region": "us-east-1",
+        # ...
+    }
+}
+```
+
+### 3. Deploy
+
+```bash
+# Deploy to development
+ENV=dev npm run deploy:env
+
+# Deploy to production
+ENV=prod npm run deploy:env
+```
+
+## Development
+
+### Project Structure
+
+```
+{module_name}/
+├── src/{module_name}/        # Main application code
+│   ├── app.py               # CDK app entry point
+│   ├── config.py            # Environment configurations
+│   ├── constructs/          # Reusable CDK constructs
+│   ├── stacks/              # CDK stack definitions
+│   └── lambda/              # Lambda function code
+├── tests/                    # Test suite
+│   ├── unit/                # Unit tests
+│   └── integration/         # Integration tests
+├── docs/                     # Documentation
+├── assets/                   # Static assets and resources
+└── .projenrc.py             # Projen configuration
+```
+
+### Available Commands
+
+#### Development
+```bash
+npm run format          # Format code with black and isort
+npm run lint           # Run linting (flake8, mypy, bandit)
+npm run test           # Run test suite
+npm run pre-commit     # Run pre-commit hooks
+```
+
+#### CDK Operations
+```bash
+npm run synth          # Synthesize CDK app
+ENV=dev npm run synth:env     # Synthesize for specific environment
+ENV=dev npm run deploy:env    # Deploy to specific environment
+ENV=dev npm run destroy:env   # Destroy specific environment
+ENV=dev npm run diff:env      # Show diff for specific environment
+```
+
+#### Documentation
+```bash
+npm run docs:build     # Build documentation
+npm run docs:clean     # Clean documentation build
+npm run docs:open      # Open documentation in browser
+npm run diagram        # Generate architecture diagram
+```
+
+#### Security
+```bash
+npm run security       # Run CDK Nag security analysis
+```
+
+### Testing
+
+The project includes comprehensive testing:
+
+- **Unit Tests**: Test individual components in isolation
+- **Integration Tests**: Test component interactions
+- **Infrastructure Tests**: Validate CDK resource creation
+
+```bash
+# Run all tests
+npm run test
+
+# Run with coverage
+npm run test -- --cov=src --cov-report=html
+
+# Run specific test file
+npm run test tests/unit/test_stacks/test_network_stack.py
+```
+
+### Code Quality
+
+The project enforces code quality through:
+
+- **Black**: Code formatting
+- **isort**: Import sorting
+- **flake8**: Style guide enforcement
+- **mypy**: Static type checking
+- **bandit**: Security vulnerability scanning
+- **pre-commit**: Automated checks before commits
+
+## Environments
+
+### Development (dev)
+- Purpose: Development and testing
+- Resources: Minimal, cost-optimized
+- Monitoring: Basic logging
+
+### Production (prod)
+- Purpose: Production workloads
+- Resources: High availability, performance optimized
+- Monitoring: Comprehensive dashboards and alerting
+
+## Security
+
+This project implements security best practices:
+
+- **IAM**: Least privilege access policies
+- **Encryption**: Data encrypted at rest and in transit
+- **Network**: Private subnets, security groups, NACLs
+- **Monitoring**: CloudTrail, GuardDuty integration
+- **Compliance**: CDK Nag validation rules
+
+## Monitoring and Observability
+
+- **CloudWatch**: Metrics, logs, and dashboards
+- **Alarms**: Automated alerting for critical metrics
+- **Tracing**: X-Ray integration for distributed tracing
+- **Health Checks**: Application and infrastructure monitoring
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/my-feature`
+3. Make changes and add tests
+4. Run quality checks: `npm run lint && npm run test`
+5. Commit changes: `git commit -m "Add my feature"`
+6. Push to branch: `git push origin feature/my-feature`
+7. Create a Pull Request
+
+## Troubleshooting
+
+### Common Issues
+
+#### CDK Bootstrap Required
+```bash
+# Bootstrap CDK in your account/region
+cdk bootstrap aws://ACCOUNT-ID/REGION
+```
+
+#### Permission Denied
+- Ensure your AWS credentials have sufficient permissions
+- Check IAM policies for CDK deployment permissions
+
+#### Stack Already Exists
+```bash
+# Import existing resources or delete conflicting stack
+cdk destroy STACK-NAME
+```
+
+### Getting Help
+
+- Check the [documentation](docs/_build/html/index.html)
+- Review [AWS CDK documentation](https://docs.aws.amazon.com/cdk/)
+- Open an issue in the repository
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+- Built with [AWS CDK](https://aws.amazon.com/cdk/)
+- Project structure managed by [Projen](https://projen.io/)
+- Security validation by [CDK Nag](https://github.com/cdklabs/cdk-nag)
+- Template created by [Euclides Figueroa](https://github.com/efigueroah)

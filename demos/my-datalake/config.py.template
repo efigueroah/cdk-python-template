@@ -1,0 +1,140 @@
+"""
+Configuration management for the CDK application
+"""
+
+import os
+from typing import Dict, Any
+
+# Environment-specific configurations
+ENVIRONMENTS = {
+    "dev": {
+        "account": os.getenv("CDK_DEV_ACCOUNT", "123456789012"),  # Replace with actual account
+        "region": os.getenv("CDK_DEV_REGION", "us-east-1"),
+        "vpc_cidr": "10.0.0.0/16",
+        "availability_zones": ["us-east-1a", "us-east-1b"],
+        "instance_types": {
+            "small": "t3.micro",
+            "medium": "t3.small",
+            "large": "t3.medium"
+        },
+        "database": {
+            "instance_class": "db.t3.micro",
+            "allocated_storage": 20,
+            "backup_retention_days": 7
+        },
+        "monitoring": {
+            "detailed_monitoring": False,
+            "log_retention_days": 7
+        }
+    },
+    "staging": {
+        "account": os.getenv("CDK_STAGING_ACCOUNT", "123456789012"),  # Replace with actual account
+        "region": os.getenv("CDK_STAGING_REGION", "us-east-1"),
+        "vpc_cidr": "10.1.0.0/16",
+        "availability_zones": ["us-east-1a", "us-east-1b", "us-east-1c"],
+        "instance_types": {
+            "small": "t3.small",
+            "medium": "t3.medium",
+            "large": "t3.large"
+        },
+        "database": {
+            "instance_class": "db.t3.small",
+            "allocated_storage": 100,
+            "backup_retention_days": 14
+        },
+        "monitoring": {
+            "detailed_monitoring": True,
+            "log_retention_days": 30
+        }
+    },
+    "prod": {
+        "account": os.getenv("CDK_PROD_ACCOUNT", "123456789012"),  # Replace with actual account
+        "region": os.getenv("CDK_PROD_REGION", "us-east-1"),
+        "vpc_cidr": "10.2.0.0/16",
+        "availability_zones": ["us-east-1a", "us-east-1b", "us-east-1c"],
+        "instance_types": {
+            "small": "t3.medium",
+            "medium": "t3.large",
+            "large": "t3.xlarge"
+        },
+        "database": {
+            "instance_class": "db.t3.medium",
+            "allocated_storage": 500,
+            "backup_retention_days": 30,
+            "multi_az": True
+        },
+        "monitoring": {
+            "detailed_monitoring": True,
+            "log_retention_days": 90
+        }
+    }
+}
+
+# Common configurations across all environments
+COMMON_CONFIG = {
+    "project_name": "{module_name}",
+    "tags": {
+        "Project": "{module_name}",
+        "ManagedBy": "CDK",
+        "Repository": "https://github.com/your-org/{module_name}"
+    },
+    "lambda": {
+        "runtime": "python3.11",
+        "timeout": 30,
+        "memory_size": 128
+    },
+    "s3": {
+        "versioning": True,
+        "encryption": True,
+        "public_read_access": False
+    }
+}
+
+def get_config(environment: str = "dev") -> Dict[str, Any]:
+    """
+    Get configuration for the specified environment
+    
+    Args:
+        environment: Environment name (dev, staging, prod)
+        
+    Returns:
+        Configuration dictionary for the environment
+        
+    Raises:
+        ValueError: If environment is not supported
+    """
+    if environment not in ENVIRONMENTS:
+        raise ValueError(f"Unsupported environment: {environment}. Supported: {list(ENVIRONMENTS.keys())}")
+    
+    # Merge common config with environment-specific config
+    config = {**COMMON_CONFIG, **ENVIRONMENTS[environment]}
+    config["environment"] = environment
+    
+    return config
+
+def get_resource_name(base_name: str, environment: str = "dev") -> str:
+    """
+    Generate a standardized resource name
+    
+    Args:
+        base_name: Base name for the resource
+        environment: Environment name
+        
+    Returns:
+        Formatted resource name
+    """
+    project_name = COMMON_CONFIG["project_name"]
+    return f"{project_name}-{environment}-{base_name}"
+
+def get_stack_name(stack_type: str, environment: str = "dev") -> str:
+    """
+    Generate a standardized stack name
+    
+    Args:
+        stack_type: Type of stack (network, compute, storage, etc.)
+        environment: Environment name
+        
+    Returns:
+        Formatted stack name
+    """
+    return get_resource_name(f"{stack_type}-stack", environment)

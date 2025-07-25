@@ -1,0 +1,70 @@
+Welcome to {module_name} Documentation
+=====================================
+
+{module_name} is an AWS CDK Python application that provides infrastructure as code
+for [describe your project purpose here].
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+
+   architecture/index
+   api/modules
+   guides/index
+
+Quick Start
+-----------
+
+To get started with this project:
+
+1. Install dependencies::
+
+    pip install -r requirements.txt
+
+2. Configure your AWS credentials::
+
+    aws configure
+
+3. Deploy to development environment::
+
+    ENV=dev npm run deploy:env
+
+Architecture Overview
+--------------------
+
+This application follows AWS Well-Architected principles and includes:
+
+* **Security**: IAM roles with least privilege, encryption at rest and in transit
+* **Reliability**: Multi-AZ deployments, automated backups, health checks
+* **Performance**: Auto-scaling, caching, optimized resource configurations
+* **Cost Optimization**: Right-sized instances, lifecycle policies, monitoring
+* **Operational Excellence**: Infrastructure as code, automated testing, monitoring
+
+Components
+----------
+
+The application consists of the following main components:
+
+* **Network Stack**: VPC, subnets, security groups, and networking components
+* **Compute Stack**: Lambda functions, ECS services, and compute resources
+* **Storage Stack**: Databases, S3 buckets, and storage solutions
+* **API Stack**: API Gateway, authentication, and API management
+* **Monitoring Stack**: CloudWatch dashboards, alarms, and logging
+
+Environments
+-----------
+
+The application supports multiple environments:
+
+* **Development (dev)**: For development and testing
+* **Staging (staging)**: For pre-production validation
+* **Production (prod)**: For production workloads
+
+Each environment has its own configuration in ``src/{module_name}/config.py``.
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`

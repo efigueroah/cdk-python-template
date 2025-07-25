@@ -165,6 +165,9 @@ project = AwsCdkPythonApp(
         "mypy>=1.8.0",
         "bandit>=1.7.5",
         
+        # CDK Nag para validaciones de seguridad
+        "cdk-nag>=2.27.0",
+        
         # Documentación
         "sphinx>=7.2.0",
         "sphinx-rtd-theme>=2.0.0",
@@ -297,6 +300,47 @@ fi
 # Volver al directorio original y mover el proyecto
 cd ..
 mv "$TEMP_PROJECT_DIR" "$PROJECT_NAME"
+
+# Corregir el entorno virtual Python
+echo "🐍 Corrigiendo entorno virtual Python..."
+cd "$PROJECT_NAME"
+
+# Eliminar entorno virtual temporal que puede estar mal configurado
+if [ -d ".env" ]; then
+    rm -rf .env
+    echo "   🗑️  Eliminando entorno virtual temporal"
+fi
+
+# Verificar si virtualenv está disponible, si no, instalarlo
+if ! command -v virtualenv >/dev/null 2>&1; then
+    echo "   📦 Instalando virtualenv..."
+    pip install virtualenv || {
+        echo "⚠️  No se pudo instalar virtualenv, usando python3 -m venv como fallback"
+        python3 -m venv .env
+    }
+else
+    # Crear entorno virtual limpio con virtualenv
+    echo "   🔧 Creando entorno virtual con virtualenv..."
+    virtualenv .env
+fi
+
+# Activar entorno virtual y reinstalar dependencias
+echo "   📚 Instalando dependencias en el entorno virtual corregido..."
+source .env/bin/activate
+
+# Actualizar pip
+python -m pip install --upgrade pip >/dev/null 2>&1
+
+# Instalar dependencias de producción
+pip install -r requirements.txt >/dev/null 2>&1
+
+# Instalar dependencias de desarrollo
+pip install -r requirements-dev.txt >/dev/null 2>&1
+
+echo "✅ Entorno virtual corregido y dependencias instaladas"
+
+# Volver al directorio padre
+cd ..
 
 echo ""
 echo "🎉 ¡Proyecto '$PROJECT_NAME' creado exitosamente!"

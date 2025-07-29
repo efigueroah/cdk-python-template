@@ -1,134 +1,390 @@
 """
-Gestión de configuración para la aplicación CDK
+Gestión de configuración para la aplicación CDK usando hg_aws_helpers
 """
 
 import os
-from typing import Dict, Any
+from pathlib import Path
+from typing import Any
 
-# Configuraciones específicas por ambiente
-ENVIRONMENTS = {
-    "dev": {
-        "account": os.getenv("CDK_DEV_ACCOUNT", "123456789012"),  # Reemplazar con cuenta real
-        "region": os.getenv("CDK_DEV_REGION", "us-east-1"),
-        "vpc_cidr": "10.0.0.0/16",
-        "availability_zones": ["us-east-1a", "us-east-1b"],
-        "instance_types": {
-            "small": "t3.micro",
-            "medium": "t3.small",
-            "large": "t3.medium"
-        },
-        "database": {
-            "instance_class": "db.t3.micro",
-            "allocated_storage": 20,
-            "backup_retention_days": 7
-        },
-        "monitoring": {
-            "detailed_monitoring": False,
-            "log_retention_days": 7
-        }
-    },
-    "staging": {
-        "account": os.getenv("CDK_STAGING_ACCOUNT", "123456789012"),  # Reemplazar con cuenta real
-        "region": os.getenv("CDK_STAGING_REGION", "us-east-1"),
-        "vpc_cidr": "10.1.0.0/16",
-        "availability_zones": ["us-east-1a", "us-east-1b", "us-east-1c"],
-        "instance_types": {
-            "small": "t3.small",
-            "medium": "t3.medium",
-            "large": "t3.large"
-        },
-        "database": {
-            "instance_class": "db.t3.small",
-            "allocated_storage": 100,
-            "backup_retention_days": 14
-        },
-        "monitoring": {
-            "detailed_monitoring": True,
-            "log_retention_days": 30
-        }
-    },
-    "prod": {
-        "account": os.getenv("CDK_PROD_ACCOUNT", "123456789012"),  # Reemplazar con cuenta real
-        "region": os.getenv("CDK_PROD_REGION", "us-east-1"),
-        "vpc_cidr": "10.2.0.0/16",
-        "availability_zones": ["us-east-1a", "us-east-1b", "us-east-1c"],
-        "instance_types": {
-            "small": "t3.medium",
-            "medium": "t3.large",
-            "large": "t3.xlarge"
-        },
-        "database": {
-            "instance_class": "db.t3.medium",
-            "allocated_storage": 500,
-            "backup_retention_days": 30,
-            "multi_az": True
-        },
-        "monitoring": {
-            "detailed_monitoring": True,
-            "log_retention_days": 90
-        }
-    }
-}
+from helpers.hg_aws_helpers import ConfigLoader, ConfigConverter
 
-# Configuraciones comunes para todos los ambientes
-COMMON_CONFIG = {
-    "project_name": "{module_name}",
-    "tags": {
-        "Project": "{module_name}",
-        "ManagedBy": "CDK",
-        "Repository": "https://github.com/your-org/{module_name}"
-    },
-    "lambda": {
-        "runtime": "python3.11",
-        "timeout": 30,
-        "memory_size": 128
-    },
-    "s3": {
-        "versioning": True,
-        "encryption": True,
-        "public_read_access": False
-    }
-}
 
-def get_config(environment: str = "dev") -> Dict[str, Any]:
+class ProjectConfig:
     """
-    Obtener configuración para el ambiente especificado
+    Clase para gestionar la configuración del proyecto usando hg_aws_helpers
+    """
+    
+    def __init__(self, environment: str = "dev", config_dir: str = "config"):
+        """
+        Inicializar configuración del proyecto
+        
+        Args:
+            environment: Ambiente (dev, staging, prod)
+            config_dir: Directorio de archivos de configuración
+        """
+        self.environment = environment
+        self.config_dir = Path(config_dir)
+        self._config_loader = None
+        self._config = None
+        
+        # Inicializar configuración
+        self._load_configuration()
+    
+    def _load_configuration(self):
+        """Cargar configuración usando ConfigLoader de hg_aws_helpers"""
+        try:
+            # Buscar archivo de configuración base
+            base_config_file = self._find_config_file("base")
+            
+            if base_config_file:
+                self._config_loader = ConfigLoader(
+                    config_file=str(base_config_file),
+                    config_dir=str(self.config_dir),
+                    environment=self.environment
+                )
+                self._config = self._config_loader.load_config()
+            else:
+                # Fallback: crear configuración por defecto
+                self._create_default_config()
+                
+        except Exception as e:
+            print(f"⚠️  Error cargando configuración: {e}")
+            print("📝 Creando configuración por defecto...")
+            self._create_default_config()
+    
+    def _find_config_file(self, config_type: str = "base") -> Path:
+        """
+        Buscar archivo de configuración en múltiples formatos
+        
+        Args:
+            config_type: Tipo de configuración (base, proyecto específico)
+            
+        Returns:
+            Path al archivo de configuración encontrado
+        """
+        possible_files = [
+            self.config_dir / f"{config_type}.toml",
+            self.config_dir / f"{config_type}.json",
+            self.config_dir / f"{config_type}.yaml",
+            self.config_dir / f"{config_type}.yml",
+            # Archivos específicos del proyecto
+            self.config_dir / f"{self.project_name}-{self.environment}.toml",
+            self.config_dir / f"{self.project_name}-{self.environment}.json",
+            self.config_dir / f"{self.project_name}-{self.environment}.yaml",
+        ]
+        
+        for config_file in possible_files:
+            if config_file.exists():
+                return config_file
+        
+        return None
+    
+    def _create_default_config(self):
+        """Crear configuración por defecto si no existe archivo externo"""
+        from helpers.hg_aws_helpers.config_loader import ConfigSection
+        
+        default_config = {
+            "project": {
+                "name": "{module_name}",
+                "environment": self.environment,
+                "description": "Proyecto CDK generado desde plantilla Projen_HG"
+            },
+            "aws": {
+                "account": os.getenv(f"CDK_{self.environment.upper()}_ACCOUNT", "123456789012"),
+                "region": os.getenv(f"CDK_{self.environment.upper()}_REGION", "us-east-1")
+            },
+            "network": {
+                "vpc_cidr": f"10.{self._get_network_offset()}.0.0/16",
+                "availability_zones": self._get_default_azs(),
+                "nat_gateways": 1 if self.environment == "dev" else 2
+            },
+            "compute": {
+                "instance_types": self._get_instance_types(),
+                "lambda": {
+                    "runtime": "python3.11",
+                    "timeout": 30,
+                    "memory_size": 128
+                }
+            },
+            "database": self._get_database_config(),
+            "storage": {
+                "s3": {
+                    "versioning": True,
+                    "encryption": True,
+                    "public_read_access": False
+                }
+            },
+            "monitoring": self._get_monitoring_config(),
+            "tags": {
+                "Project": "{module_name}",
+                "Environment": self.environment.title(),
+                "ManagedBy": "CDK",
+                "Repository": "https://github.com/your-org/{module_name}"
+            }
+        }
+        
+        self._config = ConfigSection(default_config)
+    
+    def _get_network_offset(self) -> int:
+        """Obtener offset de red según ambiente"""
+        offsets = {"dev": 0, "staging": 1, "prod": 2}
+        return offsets.get(self.environment, 0)
+    
+    def _get_default_azs(self) -> list:
+        """Obtener zonas de disponibilidad por defecto según ambiente"""
+        region = os.getenv(f"CDK_{self.environment.upper()}_REGION", "us-east-1")
+        if self.environment == "dev":
+            return [f"{region}a", f"{region}b"]
+        else:
+            return [f"{region}a", f"{region}b", f"{region}c"]
+    
+    def _get_instance_types(self) -> dict:
+        """Obtener tipos de instancia según ambiente"""
+        instance_configs = {
+            "dev": {
+                "small": "t3.micro",
+                "medium": "t3.small", 
+                "large": "t3.medium"
+            },
+            "staging": {
+                "small": "t3.small",
+                "medium": "t3.medium",
+                "large": "t3.large"
+            },
+            "prod": {
+                "small": "t3.medium",
+                "medium": "t3.large",
+                "large": "t3.xlarge"
+            }
+        }
+        return instance_configs.get(self.environment, instance_configs["dev"])
+    
+    def _get_database_config(self) -> dict:
+        """Obtener configuración de base de datos según ambiente"""
+        db_configs = {
+            "dev": {
+                "instance_class": "db.t3.micro",
+                "allocated_storage": 20,
+                "backup_retention_days": 7,
+                "multi_az": False
+            },
+            "staging": {
+                "instance_class": "db.t3.small",
+                "allocated_storage": 100,
+                "backup_retention_days": 14,
+                "multi_az": False
+            },
+            "prod": {
+                "instance_class": "db.t3.medium",
+                "allocated_storage": 500,
+                "backup_retention_days": 30,
+                "multi_az": True
+            }
+        }
+        return db_configs.get(self.environment, db_configs["dev"])
+    
+    def _get_monitoring_config(self) -> dict:
+        """Obtener configuración de monitoreo según ambiente"""
+        monitoring_configs = {
+            "dev": {
+                "detailed_monitoring": False,
+                "log_retention_days": 7,
+                "enable_dashboard": False
+            },
+            "staging": {
+                "detailed_monitoring": True,
+                "log_retention_days": 30,
+                "enable_dashboard": True
+            },
+            "prod": {
+                "detailed_monitoring": True,
+                "log_retention_days": 90,
+                "enable_dashboard": True
+            }
+        }
+        return monitoring_configs.get(self.environment, monitoring_configs["dev"])
+    
+    @property
+    def config(self):
+        """Obtener objeto de configuración con acceso por atributos"""
+        return self._config
+    
+    @property
+    def project_name(self) -> str:
+        """Obtener nombre del proyecto"""
+        if self._config:
+            return self._config.project.get('name', '{module_name}')
+        return '{module_name}'
+    
+    def get_resource_name(self, base_name: str) -> str:
+        """
+        Generar nombre de recurso estandarizado
+        
+        Args:
+            base_name: Nombre base del recurso
+            
+        Returns:
+            Nombre de recurso formateado
+        """
+        return f"{self.project_name}-{self.environment}-{base_name}"
+    
+    def get_stack_name(self, stack_type: str) -> str:
+        """
+        Generar nombre de stack estandarizado
+        
+        Args:
+            stack_type: Tipo de stack (network, compute, storage, etc.)
+            
+        Returns:
+            Nombre de stack formateado
+        """
+        return self.get_resource_name(f"{stack_type}-stack")
+    
+    def export_to_cdk_context(self, cdk_json_path: str = "cdk.json"):
+        """
+        Exportar configuración actual al contexto de CDK
+        
+        Args:
+            cdk_json_path: Ruta al archivo cdk.json
+        """
+        if self._config_loader:
+            converter = ConfigConverter()
+            try:
+                updated_cdk = converter.export_to_cdk_context(
+                    config_file=str(self._find_config_file("base")),
+                    cdk_json_path=cdk_json_path,
+                    environment=self.environment
+                )
+                print(f"✅ Configuración exportada a CDK context: {updated_cdk}")
+            except Exception as e:
+                print(f"⚠️  Error exportando a CDK context: {e}")
+    
+    def create_sample_config_files(self):
+        """Crear archivos de configuración de ejemplo"""
+        print(f"📝 Creando archivos de configuración de ejemplo en {self.config_dir}/")
+        
+        # Crear directorio si no existe
+        self.config_dir.mkdir(exist_ok=True)
+        
+        # Archivo base.toml
+        base_toml = f'''# Configuración base para {self.project_name}
+[project]
+name = "{self.project_name}"
+description = "Proyecto CDK generado desde plantilla Projen_HG"
+version = "1.0.0"
+owner = "Equipo DevOps"
+
+[aws]
+region = "us-east-1"
+account_id = "123456789012"  # Reemplazar con tu Account ID
+
+[network]
+vpc_cidr = "10.0.0.0/16"
+public_subnets = ["10.0.1.0/24", "10.0.2.0/24"]
+private_subnets = ["10.0.3.0/24", "10.0.4.0/24"]
+nat_gateways = 1
+
+[compute]
+instance_type = "t3.micro"
+min_capacity = 1
+max_capacity = 3
+
+[database]
+engine = "mysql"
+instance_class = "db.t3.small"
+allocated_storage = 20
+backup_retention_days = 7
+
+[storage]
+s3_versioning = true
+s3_encryption = true
+
+[monitoring]
+enable_cloudwatch_alarms = true
+log_retention_days = 30
+
+[tags]
+Environment = "base"
+Project = "{self.project_name}"
+ManagedBy = "CDK"
+'''
+        
+        # Archivo env.dev.toml
+        dev_toml = '''# Configuración específica para desarrollo
+[project]
+environment = "dev"
+
+[aws]
+region = "us-east-1"
+
+[network]
+nat_gateways = 1
+
+[compute]
+instance_type = "t3.micro"
+min_capacity = 1
+max_capacity = 2
+
+[database]
+instance_class = "db.t3.micro"
+allocated_storage = 20
+backup_retention_days = 3
+
+[monitoring]
+enable_cloudwatch_alarms = false
+log_retention_days = 7
+
+[tags]
+Environment = "Development"
+CostCenter = "DevOps-Dev"
+'''
+        
+        # Escribir archivos
+        with open(self.config_dir / "base.toml", "w", encoding="utf-8") as f:
+            f.write(base_toml)
+        
+        with open(self.config_dir / "env.dev.toml", "w", encoding="utf-8") as f:
+            f.write(dev_toml)
+        
+        print("✅ Archivos de configuración creados:")
+        print(f"   • {self.config_dir}/base.toml")
+        print(f"   • {self.config_dir}/env.dev.toml")
+        print("\n💡 Edita estos archivos para personalizar tu configuración")
+
+
+# Funciones de conveniencia para compatibilidad
+def get_config(environment: str = "dev") -> Any:
+    """
+    Obtener configuración para el ambiente especificado usando hg_aws_helpers
     
     Args:
         environment: Nombre del ambiente (dev, staging, prod)
         
     Returns:
-        Diccionario de configuración para el ambiente
-        
-    Raises:
-        ValueError: Si el ambiente no es soportado
+        Objeto de configuración con acceso por atributos
     """
-    if environment not in ENVIRONMENTS:
-        raise ValueError(f"Ambiente no soportado: {environment}. Soportados: {list(ENVIRONMENTS.keys())}")
-    
-    # Combinar configuración común con configuración específica del ambiente
-    config = {**COMMON_CONFIG, **ENVIRONMENTS[environment]}
-    config["environment"] = environment
-    
-    return config
+    project_config = ProjectConfig(environment=environment)
+    return project_config.config
+
 
 def get_resource_name(base_name: str, environment: str = "dev") -> str:
     """
-    Generar un nombre de recurso estandarizado
+    Generar nombre de recurso estandarizado
     
     Args:
-        base_name: Nombre base para el recurso
+        base_name: Nombre base del recurso
         environment: Nombre del ambiente
         
     Returns:
         Nombre de recurso formateado
     """
-    project_name = COMMON_CONFIG["project_name"]
-    return f"{project_name}-{environment}-{base_name}"
+    project_config = ProjectConfig(environment=environment)
+    return project_config.get_resource_name(base_name)
+
 
 def get_stack_name(stack_type: str, environment: str = "dev") -> str:
     """
-    Generar un nombre de stack estandarizado
+    Generar nombre de stack estandarizado
     
     Args:
         stack_type: Tipo de stack (network, compute, storage, etc.)
@@ -137,4 +393,35 @@ def get_stack_name(stack_type: str, environment: str = "dev") -> str:
     Returns:
         Nombre de stack formateado
     """
-    return get_resource_name(f"{stack_type}-stack", environment)
+    project_config = ProjectConfig(environment=environment)
+    return project_config.get_stack_name(stack_type)
+
+
+def create_sample_config_files(environment: str = "dev"):
+    """
+    Crear archivos de configuración de ejemplo
+    
+    Args:
+        environment: Ambiente para el cual crear la configuración
+    """
+    project_config = ProjectConfig(environment=environment)
+    project_config.create_sample_config_files()
+
+
+# Instancia global para uso directo
+_project_config = None
+
+def get_project_config(environment: str = "dev") -> ProjectConfig:
+    """
+    Obtener instancia singleton de ProjectConfig
+    
+    Args:
+        environment: Ambiente a cargar
+        
+    Returns:
+        Instancia de ProjectConfig
+    """
+    global _project_config
+    if _project_config is None or _project_config.environment != environment:
+        _project_config = ProjectConfig(environment=environment)
+    return _project_config

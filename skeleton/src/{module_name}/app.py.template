@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
 Punto de Entrada de la Aplicación AWS CDK
+Configuración centralizada usando hg_aws_helpers
 """
 
 import os
@@ -8,7 +9,7 @@ import os
 from aws_cdk import App, Environment
 from cdk_nag import AwsSolutionsChecks
 
-from .config import get_config
+from .config import get_project_config
 
 # Importa tus stacks aquí
 # from .stacks.network_stack import NetworkStack
@@ -22,34 +23,52 @@ def main():
     # Obtener ambiente desde contexto o variable de ambiente
     env_name = app.node.try_get_context("environment") or os.getenv("CDK_ENVIRONMENT", "dev")
     
-    # Cargar configuración para el ambiente
-    config = get_config(env_name)
+    # Cargar configuración usando hg_aws_helpers
+    project_config = get_project_config(env_name)
+    config = project_config.config
+    
+    print(f"🚀 Iniciando aplicación CDK para ambiente: {env_name}")
+    print(f"📋 Proyecto: {config.project.name}")
+    print(f"☁️  Cuenta AWS: {config.aws.account}")
+    print(f"🌍 Región: {config.aws.region}")
     
     # Definir ambiente AWS
     aws_env = Environment(
-        account=config["account"],
-        region=config["region"]
+        account=config.aws.get('account', config.aws.get('account_id')),
+        region=config.aws.region
     )
     
-    # Crear stacks
+    # Crear stacks usando configuración centralizada
     # Ejemplo:
     # network_stack = NetworkStack(
-    #     app, f"{env_name}-network-stack",
+    #     app, project_config.get_stack_name("network"),
     #     config=config,
-    #     env=aws_env
+    #     env=aws_env,
+    #     description=f"Stack de red para {config.project.name} en {env_name}"
     # )
     
     # compute_stack = ComputeStack(
-    #     app, f"{env_name}-compute-stack",
+    #     app, project_config.get_stack_name("compute"),
     #     config=config,
-    #     env=aws_env
+    #     env=aws_env,
+    #     description=f"Stack de cómputo para {config.project.name} en {env_name}"
     # )
     # compute_stack.add_dependency(network_stack)
     
     # Aplicar CDK Nag para validación de seguridad y mejores prácticas
-    AwsSolutionsChecks(app, verbose=True)
+    if os.getenv("ENABLE_CDK_NAG", "true").lower() == "true":
+        print("🔒 Aplicando validaciones CDK Nag...")
+        AwsSolutionsChecks(app, verbose=True)
     
+    # Exportar configuración al contexto de CDK si es necesario
+    if os.getenv("EXPORT_CONFIG_TO_CDK", "false").lower() == "true":
+        project_config.export_to_cdk_context()
+    
+    # Sintetizar aplicación
     app.synth()
+    
+    print(f"✅ Aplicación CDK sintetizada exitosamente para {env_name}")
+
 
 if __name__ == "__main__":
     main()

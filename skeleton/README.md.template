@@ -31,21 +31,43 @@ pip install -r requirements-dev.txt
 
 ### 2. Configurar Ambientes
 
-Edita `src/{module_name}/config.py` para establecer tus IDs de cuenta AWS y regiones:
+Este proyecto usa **configuración centralizada** con archivos externos TOML/JSON/YAML:
 
-```python
-ENVIRONMENTS = {
-    "dev": {
-        "account": "TU_ID_CUENTA_DEV",
-        "region": "us-east-1",
-        # ...
-    },
-    "prod": {
-        "account": "TU_ID_CUENTA_PROD", 
-        "region": "us-east-1",
-        # ...
-    }
-}
+```bash
+# Crear archivos de configuración de ejemplo
+python -c "from src.{module_name}.config import create_sample_config_files; create_sample_config_files()"
+```
+
+Esto creará:
+- `config/base.toml` - Configuración base común
+- `config/env.dev.toml` - Configuración específica de desarrollo
+
+Edita estos archivos para establecer tus configuraciones:
+
+```toml
+# config/base.toml
+[aws]
+account_id = "TU_ID_CUENTA"
+region = "us-east-1"
+
+[network]
+vpc_cidr = "10.0.0.0/16"
+nat_gateways = 1
+
+[project]
+name = "{module_name}"
+```
+
+```toml
+# config/env.dev.toml
+[project]
+environment = "dev"
+
+[aws]
+region = "us-east-1"
+
+[monitoring]
+detailed_monitoring = false
 ```
 
 ### 3. Desplegar

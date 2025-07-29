@@ -1,53 +1,53 @@
-Welcome to {module_name} Documentation
-=====================================
+Bienvenido a la Documentación de {module_name}
+=============================================
 
-{module_name} is an AWS CDK Python application that provides infrastructure as code
-for [describe your project purpose here].
+{module_name} es una aplicación AWS CDK Python que proporciona infraestructura como código
+para [describe el propósito de tu proyecto aquí].
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: Contenidos:
 
    architecture/index
    api/modules
    guides/index
 
-Quick Start
------------
+Inicio Rápido
+-------------
 
-To get started with this project:
+Para comenzar con este proyecto:
 
-1. Install dependencies::
+1. Instalar dependencias::
 
     pip install -r requirements.txt
 
-2. Configure your AWS credentials::
+2. Configurar tus credenciales AWS::
 
     aws configure
 
-3. Deploy to development environment::
+3. Desplegar al ambiente de desarrollo::
 
     ENV=dev npm run deploy:env
 
-Architecture Overview
---------------------
+Descripción de la Arquitectura
+------------------------------
 
-This application follows AWS Well-Architected principles and includes:
+Esta aplicación sigue los principios de AWS Well-Architected e incluye:
 
-* **Security**: IAM roles with least privilege, encryption at rest and in transit
-* **Reliability**: Multi-AZ deployments, automated backups, health checks
-* **Performance**: Auto-scaling, caching, optimized resource configurations
-* **Cost Optimization**: Right-sized instances, lifecycle policies, monitoring
-* **Operational Excellence**: Infrastructure as code, automated testing, monitoring
+* **Seguridad**: Roles IAM con menor privilegio, encriptación en reposo y en tránsito
+* **Confiabilidad**: Despliegues Multi-AZ, respaldos automatizados, health checks
+* **Rendimiento**: Auto-scaling, caching, configuraciones de recursos optimizadas
+* **Optimización de Costos**: Instancias del tamaño correcto, políticas de lifecycle, monitoreo
+* **Excelencia Operacional**: Infraestructura como código, pruebas automatizadas, monitoreo
 
-Components
-----------
+Componentes
+-----------
 
-The application consists of the following main components:
+La aplicación consiste en los siguientes componentes principales:
 
-* **Network Stack**: VPC, subnets, security groups, and networking components
-* **Compute Stack**: Lambda functions, ECS services, and compute resources
-* **Storage Stack**: Databases, S3 buckets, and storage solutions
+* **Network Stack**: VPC, subnets, security groups y componentes de red
+* **Compute Stack**: Funciones Lambda, servicios ECS y recursos de cómputo
+* **Storage Stack**: Bases de datos, buckets S3 y soluciones de almacenamiento
 * **API Stack**: API Gateway, authentication, and API management
 * **Monitoring Stack**: CloudWatch dashboards, alarms, and logging
 

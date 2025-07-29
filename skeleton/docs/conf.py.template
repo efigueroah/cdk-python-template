@@ -1,21 +1,21 @@
-# Configuration file for the Sphinx documentation builder.
+# Archivo de configuración para el constructor de documentación Sphinx.
 #
-# For the full list of built-in configuration values, see the documentation:
+# Para la lista completa de valores de configuración integrados, ver la documentación:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
 import os
 import sys
 
-# -- Path setup --------------------------------------------------------------
+# -- Configuración de rutas --------------------------------------------------
 sys.path.insert(0, os.path.abspath('../src'))
 
-# -- Project information -----------------------------------------------------
+# -- Información del proyecto ------------------------------------------------
 project = '{module_name}'
 copyright = '2024, Euclides Figueroa'
 author = 'Euclides Figueroa'
 release = '0.1.0'
 
-# -- General configuration ---------------------------------------------------
+# -- Configuración general ---------------------------------------------------
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.viewcode',
@@ -32,13 +32,13 @@ extensions = [
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
-# -- Options for HTML output -------------------------------------------------
+# -- Opciones para salida HTML -----------------------------------------------
 html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
 
-# -- Extension configuration -------------------------------------------------
+# -- Configuración de extensiones --------------------------------------------
 
-# Napoleon settings
+# Configuración de Napoleon
 napoleon_google_docstring = True
 napoleon_numpy_docstring = True
 napoleon_include_init_with_doc = False
@@ -54,7 +54,7 @@ napoleon_preprocess_types = False
 napoleon_type_aliases = None
 napoleon_attr_annotations = True
 
-# Autodoc settings
+# Configuración de Autodoc
 autodoc_default_options = {
     'members': True,
     'member-order': 'bysource',
@@ -63,14 +63,14 @@ autodoc_default_options = {
     'exclude-members': '__weakref__'
 }
 
-# Intersphinx mapping
+# Mapeo de Intersphinx
 intersphinx_mapping = {
     'python': ('https://docs.python.org/3/', None),
     'boto3': ('https://boto3.amazonaws.com/v1/documentation/api/latest/', None),
 }
 
-# Todo extension
+# Extensión Todo
 todo_include_todos = True
 
-# Mermaid settings
+# Configuración de Mermaid
 mermaid_version = "latest"

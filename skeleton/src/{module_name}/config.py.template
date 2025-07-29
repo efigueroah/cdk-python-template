@@ -1,14 +1,14 @@
 """
-Configuration management for the CDK application
+Gestión de configuración para la aplicación CDK
 """
 
 import os
 from typing import Dict, Any
 
-# Environment-specific configurations
+# Configuraciones específicas por ambiente
 ENVIRONMENTS = {
     "dev": {
-        "account": os.getenv("CDK_DEV_ACCOUNT", "123456789012"),  # Replace with actual account
+        "account": os.getenv("CDK_DEV_ACCOUNT", "123456789012"),  # Reemplazar con cuenta real
         "region": os.getenv("CDK_DEV_REGION", "us-east-1"),
         "vpc_cidr": "10.0.0.0/16",
         "availability_zones": ["us-east-1a", "us-east-1b"],
@@ -28,7 +28,7 @@ ENVIRONMENTS = {
         }
     },
     "staging": {
-        "account": os.getenv("CDK_STAGING_ACCOUNT", "123456789012"),  # Replace with actual account
+        "account": os.getenv("CDK_STAGING_ACCOUNT", "123456789012"),  # Reemplazar con cuenta real
         "region": os.getenv("CDK_STAGING_REGION", "us-east-1"),
         "vpc_cidr": "10.1.0.0/16",
         "availability_zones": ["us-east-1a", "us-east-1b", "us-east-1c"],
@@ -48,7 +48,7 @@ ENVIRONMENTS = {
         }
     },
     "prod": {
-        "account": os.getenv("CDK_PROD_ACCOUNT", "123456789012"),  # Replace with actual account
+        "account": os.getenv("CDK_PROD_ACCOUNT", "123456789012"),  # Reemplazar con cuenta real
         "region": os.getenv("CDK_PROD_REGION", "us-east-1"),
         "vpc_cidr": "10.2.0.0/16",
         "availability_zones": ["us-east-1a", "us-east-1b", "us-east-1c"],
@@ -70,7 +70,7 @@ ENVIRONMENTS = {
     }
 }
 
-# Common configurations across all environments
+# Configuraciones comunes para todos los ambientes
 COMMON_CONFIG = {
     "project_name": "{module_name}",
     "tags": {
@@ -92,21 +92,21 @@ COMMON_CONFIG = {
 
 def get_config(environment: str = "dev") -> Dict[str, Any]:
     """
-    Get configuration for the specified environment
+    Obtener configuración para el ambiente especificado
     
     Args:
-        environment: Environment name (dev, staging, prod)
+        environment: Nombre del ambiente (dev, staging, prod)
         
     Returns:
-        Configuration dictionary for the environment
+        Diccionario de configuración para el ambiente
         
     Raises:
-        ValueError: If environment is not supported
+        ValueError: Si el ambiente no es soportado
     """
     if environment not in ENVIRONMENTS:
-        raise ValueError(f"Unsupported environment: {environment}. Supported: {list(ENVIRONMENTS.keys())}")
+        raise ValueError(f"Ambiente no soportado: {environment}. Soportados: {list(ENVIRONMENTS.keys())}")
     
-    # Merge common config with environment-specific config
+    # Combinar configuración común con configuración específica del ambiente
     config = {**COMMON_CONFIG, **ENVIRONMENTS[environment]}
     config["environment"] = environment
     
@@ -114,27 +114,27 @@ def get_config(environment: str = "dev") -> Dict[str, Any]:
 
 def get_resource_name(base_name: str, environment: str = "dev") -> str:
     """
-    Generate a standardized resource name
+    Generar un nombre de recurso estandarizado
     
     Args:
-        base_name: Base name for the resource
-        environment: Environment name
+        base_name: Nombre base para el recurso
+        environment: Nombre del ambiente
         
     Returns:
-        Formatted resource name
+        Nombre de recurso formateado
     """
     project_name = COMMON_CONFIG["project_name"]
     return f"{project_name}-{environment}-{base_name}"
 
 def get_stack_name(stack_type: str, environment: str = "dev") -> str:
     """
-    Generate a standardized stack name
+    Generar un nombre de stack estandarizado
     
     Args:
-        stack_type: Type of stack (network, compute, storage, etc.)
-        environment: Environment name
+        stack_type: Tipo de stack (network, compute, storage, etc.)
+        environment: Nombre del ambiente
         
     Returns:
-        Formatted stack name
+        Nombre de stack formateado
     """
     return get_resource_name(f"{stack_type}-stack", environment)

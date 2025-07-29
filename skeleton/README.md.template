@@ -1,217 +1,217 @@
 # {module_name}
 
-AWS CDK Python application for [describe your project purpose here].
+Aplicación AWS CDK Python para [describe el propósito de tu proyecto aquí].
 
-## Overview
+## Descripción General
 
-This project provides infrastructure as code using AWS CDK with Python, following best practices for security, reliability, and maintainability.
+Este proyecto proporciona infraestructura como código usando AWS CDK con Python, siguiendo las mejores prácticas para seguridad, confiabilidad y mantenibilidad.
 
-## Architecture
+## Arquitectura
 
-[Add architecture diagram and description here]
+[Agregar diagrama de arquitectura y descripción aquí]
 
-## Prerequisites
+## Prerrequisitos
 
 - Python 3.11+
 - Node.js 18+
 - AWS CDK CLI: `npm install -g aws-cdk`
-- AWS CLI configured with appropriate credentials
+- AWS CLI configurado con credenciales apropiadas
 
-## Quick Start
+## Inicio Rápido
 
-### 1. Install Dependencies
+### 1. Instalar Dependencias
 
 ```bash
-# Install Python dependencies
+# Instalar dependencias de Python
 pip install -r requirements.txt
 
-# Install development dependencies
+# Instalar dependencias de desarrollo
 pip install -r requirements-dev.txt
 ```
 
-### 2. Configure Environments
+### 2. Configurar Ambientes
 
-Edit `src/{module_name}/config.py` to set your AWS account IDs and regions:
+Edita `src/{module_name}/config.py` para establecer tus IDs de cuenta AWS y regiones:
 
 ```python
 ENVIRONMENTS = {
     "dev": {
-        "account": "YOUR_DEV_ACCOUNT_ID",
+        "account": "TU_ID_CUENTA_DEV",
         "region": "us-east-1",
         # ...
     },
     "prod": {
-        "account": "YOUR_PROD_ACCOUNT_ID", 
+        "account": "TU_ID_CUENTA_PROD", 
         "region": "us-east-1",
         # ...
     }
 }
 ```
 
-### 3. Deploy
+### 3. Desplegar
 
 ```bash
-# Deploy to development
+# Desplegar a desarrollo
 ENV=dev npm run deploy:env
 
-# Deploy to production
+# Desplegar a producción
 ENV=prod npm run deploy:env
 ```
 
-## Development
+## Desarrollo
 
-### Project Structure
+### Estructura del Proyecto
 
 ```
 {module_name}/
-├── src/{module_name}/        # Main application code
-│   ├── app.py               # CDK app entry point
-│   ├── config.py            # Environment configurations
-│   ├── constructs/          # Reusable CDK constructs
-│   ├── stacks/              # CDK stack definitions
-│   └── lambda/              # Lambda function code
-├── tests/                    # Test suite
-│   ├── unit/                # Unit tests
-│   └── integration/         # Integration tests
-├── docs/                     # Documentation
-├── assets/                   # Static assets and resources
-└── .projenrc.py             # Projen configuration
+├── src/{module_name}/        # Código principal de la aplicación
+│   ├── app.py               # Punto de entrada de la app CDK
+│   ├── config.py            # Configuraciones de ambiente
+│   ├── constructs/          # Constructs CDK reutilizables
+│   ├── stacks/              # Definiciones de stacks CDK
+│   └── lambda/              # Código de funciones Lambda
+├── tests/                    # Suite de pruebas
+│   ├── unit/                # Pruebas unitarias
+│   └── integration/         # Pruebas de integración
+├── docs/                     # Documentación
+├── assets/                   # Recursos y assets estáticos
+└── .projenrc.py             # Configuración de Projen
 ```
 
-### Available Commands
+### Comandos Disponibles
 
-#### Development
+#### Desarrollo
 ```bash
-npm run format          # Format code with black and isort
-npm run lint           # Run linting (flake8, mypy, bandit)
-npm run test           # Run test suite
-npm run pre-commit     # Run pre-commit hooks
+npm run format          # Formatear código con black e isort
+npm run lint           # Ejecutar linting (flake8, mypy, bandit)
+npm run test           # Ejecutar suite de pruebas
+npm run pre-commit     # Ejecutar hooks de pre-commit
 ```
 
-#### CDK Operations
+#### Operaciones CDK
 ```bash
-npm run synth          # Synthesize CDK app
-ENV=dev npm run synth:env     # Synthesize for specific environment
-ENV=dev npm run deploy:env    # Deploy to specific environment
-ENV=dev npm run destroy:env   # Destroy specific environment
-ENV=dev npm run diff:env      # Show diff for specific environment
+npm run synth          # Sintetizar app CDK
+ENV=dev npm run synth:env     # Sintetizar para ambiente específico
+ENV=dev npm run deploy:env    # Desplegar a ambiente específico
+ENV=dev npm run destroy:env   # Destruir ambiente específico
+ENV=dev npm run diff:env      # Mostrar diferencias para ambiente específico
 ```
 
-#### Documentation
+#### Documentación
 ```bash
-npm run docs:build     # Build documentation
-npm run docs:clean     # Clean documentation build
-npm run docs:open      # Open documentation in browser
-npm run diagram        # Generate architecture diagram
+npm run docs:build     # Construir documentación
+npm run docs:clean     # Limpiar construcción de documentación
+npm run docs:open      # Abrir documentación en navegador
+npm run diagram        # Generar diagrama de arquitectura
 ```
 
-#### Security
+#### Seguridad
 ```bash
-npm run security       # Run CDK Nag security analysis
+npm run security       # Ejecutar análisis de seguridad CDK Nag
 ```
 
-### Testing
+### Pruebas
 
-The project includes comprehensive testing:
+El proyecto incluye pruebas comprehensivas:
 
-- **Unit Tests**: Test individual components in isolation
-- **Integration Tests**: Test component interactions
-- **Infrastructure Tests**: Validate CDK resource creation
+- **Pruebas Unitarias**: Prueban componentes individuales de forma aislada
+- **Pruebas de Integración**: Prueban interacciones entre componentes
+- **Pruebas de Infraestructura**: Validan la creación de recursos CDK
 
 ```bash
-# Run all tests
+# Ejecutar todas las pruebas
 npm run test
 
-# Run with coverage
+# Ejecutar con cobertura
 npm run test -- --cov=src --cov-report=html
 
-# Run specific test file
+# Ejecutar archivo de prueba específico
 npm run test tests/unit/test_stacks/test_network_stack.py
 ```
 
-### Code Quality
+### Calidad de Código
 
-The project enforces code quality through:
+El proyecto refuerza la calidad de código a través de:
 
-- **Black**: Code formatting
-- **isort**: Import sorting
-- **flake8**: Style guide enforcement
-- **mypy**: Static type checking
-- **bandit**: Security vulnerability scanning
-- **pre-commit**: Automated checks before commits
+- **Black**: Formateo de código
+- **isort**: Ordenamiento de imports
+- **flake8**: Aplicación de guía de estilo
+- **mypy**: Verificación de tipos estática
+- **bandit**: Escaneo de vulnerabilidades de seguridad
+- **pre-commit**: Verificaciones automatizadas antes de commits
 
-## Environments
+## Ambientes
 
-### Development (dev)
-- Purpose: Development and testing
-- Resources: Minimal, cost-optimized
-- Monitoring: Basic logging
+### Desarrollo (dev)
+- Propósito: Desarrollo y pruebas
+- Recursos: Mínimos, optimizados para costo
+- Monitoreo: Logging básico
 
-### Production (prod)
-- Purpose: Production workloads
-- Resources: High availability, performance optimized
-- Monitoring: Comprehensive dashboards and alerting
+### Producción (prod)
+- Propósito: Cargas de trabajo de producción
+- Recursos: Alta disponibilidad, optimizados para rendimiento
+- Monitoreo: Dashboards comprehensivos y alertas
 
-## Security
+## Seguridad
 
-This project implements security best practices:
+Este proyecto implementa mejores prácticas de seguridad:
 
-- **IAM**: Least privilege access policies
-- **Encryption**: Data encrypted at rest and in transit
-- **Network**: Private subnets, security groups, NACLs
-- **Monitoring**: CloudTrail, GuardDuty integration
-- **Compliance**: CDK Nag validation rules
+- **IAM**: Políticas de acceso de menor privilegio
+- **Encriptación**: Datos encriptados en reposo y en tránsito
+- **Red**: Subnets privadas, security groups, NACLs
+- **Monitoreo**: Integración con CloudTrail y GuardDuty
+- **Cumplimiento**: Reglas de validación CDK Nag
 
-## Monitoring and Observability
+## Monitoreo y Observabilidad
 
-- **CloudWatch**: Metrics, logs, and dashboards
-- **Alarms**: Automated alerting for critical metrics
-- **Tracing**: X-Ray integration for distributed tracing
-- **Health Checks**: Application and infrastructure monitoring
+- **CloudWatch**: Métricas, logs y dashboards
+- **Alarmas**: Alertas automatizadas para métricas críticas
+- **Trazabilidad**: Integración con X-Ray para trazabilidad distribuida
+- **Health Checks**: Monitoreo de aplicación e infraestructura
 
-## Contributing
+## Contribuir
 
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/my-feature`
-3. Make changes and add tests
-4. Run quality checks: `npm run lint && npm run test`
-5. Commit changes: `git commit -m "Add my feature"`
-6. Push to branch: `git push origin feature/my-feature`
-7. Create a Pull Request
+1. Hacer fork del repositorio
+2. Crear una rama de feature: `git checkout -b feature/mi-feature`
+3. Hacer cambios y agregar pruebas
+4. Ejecutar verificaciones de calidad: `npm run lint && npm run test`
+5. Hacer commit de cambios: `git commit -m "Agregar mi feature"`
+6. Push a la rama: `git push origin feature/mi-feature`
+7. Crear un Pull Request
 
-## Troubleshooting
+## Solución de Problemas
 
-### Common Issues
+### Problemas Comunes
 
-#### CDK Bootstrap Required
+#### CDK Bootstrap Requerido
 ```bash
-# Bootstrap CDK in your account/region
-cdk bootstrap aws://ACCOUNT-ID/REGION
+# Hacer bootstrap de CDK en tu cuenta/región
+cdk bootstrap aws://ID-CUENTA/REGION
 ```
 
-#### Permission Denied
-- Ensure your AWS credentials have sufficient permissions
-- Check IAM policies for CDK deployment permissions
+#### Permiso Denegado
+- Asegúrate de que tus credenciales AWS tengan permisos suficientes
+- Verifica las políticas IAM para permisos de despliegue CDK
 
-#### Stack Already Exists
+#### Stack Ya Existe
 ```bash
-# Import existing resources or delete conflicting stack
-cdk destroy STACK-NAME
+# Importar recursos existentes o eliminar stack conflictivo
+cdk destroy NOMBRE-STACK
 ```
 
-### Getting Help
+### Obtener Ayuda
 
-- Check the [documentation](docs/_build/html/index.html)
-- Review [AWS CDK documentation](https://docs.aws.amazon.com/cdk/)
-- Open an issue in the repository
+- Revisa la [documentación](docs/_build/html/index.html)
+- Consulta la [documentación de AWS CDK](https://docs.aws.amazon.com/cdk/)
+- Abre un issue en el repositorio
 
-## License
+## Licencia
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+Este proyecto está licenciado bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para detalles.
 
-## Acknowledgments
+## Reconocimientos
 
-- Built with [AWS CDK](https://aws.amazon.com/cdk/)
-- Project structure managed by [Projen](https://projen.io/)
-- Security validation by [CDK Nag](https://github.com/cdklabs/cdk-nag)
-- Template created by [Euclides Figueroa](https://github.com/efigueroah)
+- Construido con [AWS CDK](https://aws.amazon.com/cdk/)
+- Estructura de proyecto gestionada por [Projen](https://projen.io/)
+- Validación de seguridad por [CDK Nag](https://github.com/cdklabs/cdk-nag)
+- Template creado por [Euclides Figueroa](https://github.com/efigueroah)

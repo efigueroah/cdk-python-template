@@ -1,0 +1,12 @@
+
+[project]
+name = "proyecto-ejemplo"
+description = "Proyecto de ejemplo para demostrar el uso de ConfigLoader"
+
+[aws]
+region = "us-east-1"
+account_id = "123456789012"
+
+[network]
+vpc_cidr = "10.0.0.0/16"
+nat_gateways = 1

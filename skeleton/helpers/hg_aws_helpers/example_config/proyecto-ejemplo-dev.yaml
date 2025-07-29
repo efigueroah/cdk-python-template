@@ -1,0 +1,6 @@
+project:
+  name: proyecto-ejemplo-dev
+  tags: !!python/object/new:toml.decoder.DynamicInlineTableDict
+    dictitems:
+      Environment: Development
+      Owner: DevOps

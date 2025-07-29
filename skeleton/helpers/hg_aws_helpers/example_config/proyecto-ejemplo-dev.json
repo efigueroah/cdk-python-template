@@ -1,0 +1,9 @@
+{
+  "project": {
+    "name": "proyecto-ejemplo-dev",
+    "tags": {
+      "Owner": "DevOps",
+      "Environment": "Development"
+    }
+  }
+}
